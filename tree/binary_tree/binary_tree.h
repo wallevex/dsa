@@ -127,6 +127,28 @@ protected:
         delete v;
         return n;
     }
+
+    template <typename VST>
+    void traverseLevelFrom(BinaryTreeNode<T>* start, VST& visit) {
+        if (start == nullptr) return;
+        std::queue<BinaryTreeNode<T>*> q;
+        q.push(start);
+        while (!q.empty()) {
+            auto top = q.front();
+            q.pop();
+            visit(top);
+            if (top->hasLeftChild()) q.push(top->leftChild());
+            if (top->hasRightChild()) q.push(top->rightChild());
+        }
+    }
+
+    template <typename VST>
+    void traverseInFrom(BinaryTreeNode<T>* start, VST& visit) {
+        if (start == nullptr) return;
+        traverseInFrom(start->leftChild(), visit);
+        visit(start);
+        traverseInFrom(start->rightChild(), visit);
+    }
 public:
     BinaryTree() : _size(0), _root(nullptr) {}
     ~BinaryTree() {
@@ -188,16 +210,8 @@ public:
     }
 
     template <typename VST>
-    void traverseLevel(VST& visit) {
-        if (empty()) return;
-        std::queue<BinaryTreeNode<T>*> q;
-        q.push(_root);
-        while (!q.empty()) {
-            auto top = q.front();
-            q.pop();
-            visit(top);
-            if (top->hasLeftChild()) q.push(top->leftChild());
-            if (top->hasRightChild()) q.push(top->rightChild());
-        }
-    }
+    void traverseLevel(VST& visit) { traverseLevelFrom(_root, visit); }
+
+    template <typename VST>
+    void traverseIn(VST& visit) { traverseInFrom(_root, visit); }
 };

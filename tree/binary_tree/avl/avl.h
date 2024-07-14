@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdio>
-#include "tree/binary_tree/bst.h"
+#include "../bst.h"
 
 template<typename T> class AVL : public BST<T> {
 protected:

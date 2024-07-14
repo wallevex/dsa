@@ -1,24 +1,27 @@
 #include <bits/stdc++.h>
-#include "bst.h"
-#include "avl/avl.h"
+#include "tree/binary_tree/bst.h"
+#include "tree/binary_tree/avl/avl.h"
+#include "tree/binary_tree/splay/splay.h"
+#include "tree/binary_tree/rbt/rbt.h"
 
 using namespace std;
 
 int main() {
     // BST<int> tree;
     AVL<int> tree;
-    for (int i = 1; i <= 13; i++) {
+    for (int i = 1; i <= 20; i++) {
         tree.insert(i);
-        printf("after insert %d, tree height is %d\n", i, tree.height());
     }
 
-    auto visit = [&](BinaryTreeNode<int>* v) {
+    auto visit = [](BinaryTreeNode<int>* v) {
         if (v->parent() == nullptr) {
-            printf("[%d]\n", v->val(), v->height());
+            printf("[%d]\n", v->val());
         } else {
             printf("[%d <- %d]\n", v->parent()->val(), v->val());
         }
     };
+    printf("traverse level result:\n");
     tree.traverseLevel(visit);
+
     return 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tree/binary_tree/bst.h"
+#include "../bst.h"
 
 template<typename T> class Splay : public BST<T> {
 protected:
@@ -17,7 +17,7 @@ public:
         if (x != nullptr) {
             this->_root = splay(x);
         } else {
-            this->_root = splay(_hot);
+            this->_root = splay(this->_hot);
         }
         return this->_root;
     }
