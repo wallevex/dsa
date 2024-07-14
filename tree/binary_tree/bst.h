@@ -23,15 +23,17 @@ protected:
         c->connectAsRightChild(b);
         BinaryTree<T>::updateHeight(b);
 
+        b->detach();
+
         return b;
     }
 public:
-    BST() : _hot(nullptr), _hotc(UNDEFINED) {}
+    BST() : _hot(nullptr), _hotc(UNKNOWN) {}
 
     virtual BinaryTreeNode<T>* search(const T& e) {
         auto v = this->_root;
         _hot = nullptr;
-        _hotc = UNDEFINED;
+        _hotc = UNKNOWN;
         while (v != nullptr) {
             if (e == v->val()) {
                 return v;
@@ -58,16 +60,9 @@ public:
             return x;
         }
 
-        if (_hotc == LEFT) {
-            this->_size++;
-            x = new BinaryTreeNode<T>(e);
-            x->connectAsLeftChild(_hot);
-        } else {
-            this->_size++;
-            x = new BinaryTreeNode<T>(e);
-            x->connectAsRightChild(_hot);
-        }
-
+        this->_size++;
+        x = new BinaryTreeNode<T>(e);
+        x->connectAsChild(_hot, _hotc);
         this->updateHeightUpwards(x);
 
         return x;

@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <queue>
 
-typedef enum { UNDEFINED, LEFT, RIGHT } Dir;
+typedef enum { UNKNOWN, LEFT, RIGHT } Dir;
 
 // 树节点结构只关注节点的局部信息（比如父节点、左右子节点）和局部操作（比如插入左右子节点）
 // 遍历等涉及到整颗树的宏观操作不要放在这
@@ -17,18 +17,6 @@ protected:
     int _height;
 public:
     BinaryTreeNode(T e) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(0) {}
-
-    // 子节点相对于其父节点的左右方向
-    static Dir dirAsChild(BinaryTreeNode<T>* c) {
-        if (c->parent() == nullptr) {
-            return UNDEFINED;
-        }
-
-        if (c == c->parent()->leftChild()) {
-            return LEFT;
-        }
-        return RIGHT;
-    }
 
     int height() const {
         if (this == nullptr) { // 特殊处理空节点，很奇怪
@@ -49,6 +37,8 @@ public:
     BinaryTreeNode<T>* leftChild() { return _lc; }
 
     BinaryTreeNode<T>* rightChild() { return _rc; }
+
+    bool hasParent() const { return _parent != nullptr; }
 
     bool hasLeftChild() const { return _lc != nullptr; }
 
@@ -76,6 +66,14 @@ public:
         p->_rc = this;
     }
 
+    void connectAsChild(BinaryTreeNode<T>*p, Dir dir) {
+        if (dir == LEFT) {
+            connectAsLeftChild(p);
+        } else if (dir == RIGHT) {
+            connectAsRightChild(p);
+        }
+    }
+
     // 将当前节点和父节点断开
     void detach() {
         if (_parent == nullptr) {
@@ -88,6 +86,21 @@ public:
             _parent->_rc = nullptr;
         }
         _parent = nullptr;
+    }
+
+    // 当前节点相对于其父节点的左右方向
+    Dir dirAsChild() const {
+        if (_parent == nullptr) {
+            return UNKNOWN;
+        }
+
+        if (this == _parent->_lc) {
+            return LEFT;
+        } else if (this == _parent->_rc) {
+            return RIGHT;
+        }
+
+        return UNKNOWN;
     }
 };
 
@@ -158,7 +171,7 @@ public:
     }
 
     static bool isRoot(BinaryTreeNode<T>* v) {
-        return v->parent() == nullptr;
+        return !v->hasParent();
     }
 
     static bool isLeaf(BinaryTreeNode<T>* v) {
