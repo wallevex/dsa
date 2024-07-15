@@ -40,6 +40,10 @@ void testAVL() {
     };
     printf("traverse level result:\n");
     avl.traverseLevel(visit);
+
+    avl.remove(4);
+    printf("after remove 4, traverse level result:\n");
+    avl.traverseLevel(visit);
 }
 
 void testSplay() {
@@ -52,6 +56,8 @@ void testSplay() {
     printf("after search 1, splay height is: %d\n", splay.height());
     splay.search(3);
     printf("after search 3, splay height is: %d\n", splay.height());
+    splay.remove(3);
+    printf("after remove 3, splay height is: %d\n", splay.height());
     auto visit = [](BinaryTreeNode<int>* v) {
         if (v->parent() == nullptr) {
             printf("[%d]\n", v->val());
@@ -64,8 +70,8 @@ void testSplay() {
 }
 
 int main() {
-    testBST();
+    // testBST();
     // testAVL();
-    // testSplay();
+    testSplay();
     return 0;
 }

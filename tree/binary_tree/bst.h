@@ -28,35 +28,33 @@ protected:
         return b;
     }
 
-    //将节点e从树中摘出，但不删除
-    BinaryTreeNode<T>* extract(const T& e) {
-        auto x = search(e);
-        if (x == nullptr) {
-            return nullptr;
-        }
-
-        if (!x->hasLeftChild()) {
-            x->rightChild()->connectAsChild(x->parent(), x->dirAsChild());
-        } else if (!x->hasRightChild()) {
-            x->leftChild()->connectAsChild(x->parent(), x->dirAsChild());
+    //将节点v删除并返回新的根
+    BinaryTreeNode<T>* removeAt(BinaryTreeNode<T>* v) {
+        BinaryTreeNode<T>* r;
+        if (!v->hasRightChild()) {
+            r = v->leftChild();
+            r->connectAsChild(v->parent(), v->dirAsChild());
+            delete(v);
         } else {
-            auto succ = successor(x);
+            r = v;
+            auto succ = successorOf(v);
             this->_hot = succ->parent();
-            x->updateVal(succ->val());
+            v->updateVal(succ->val());
             succ->rightChild()->connectAsChild(succ->parent(), succ->dirAsChild());
-            x = succ;
-            x->updateVal(e);
+            delete(succ);
         }
 
-        x->detach();
+        if (!r->hasParent()) {
+            this->_root = r;
+        }
 
-        return x;
+        return r;
     }
 public:
     BST() : _hot(nullptr), _hotc(UNKNOWN) {}
 
     //返回节点v的直接后继
-    static BinaryTreeNode<T>* successor(BinaryTreeNode<T>* v) {
+    static BinaryTreeNode<T>* successorOf(BinaryTreeNode<T>* v) {
         //若v存在右子树，那么后继必然在右子树的最左侧
         if (v->hasRightChild()) {
             v = v->rightChild();
@@ -112,11 +110,12 @@ public:
     }
 
     virtual bool remove(const T& e) {
-        auto x = extract(e);
+        auto x = search(e);
         if (x == nullptr) {
             return false;
         }
-        delete(x);
+        removeAt(x);
+        this->_size--;
         this->updateHeightUpwards(this->_hot);
         return true;
     }

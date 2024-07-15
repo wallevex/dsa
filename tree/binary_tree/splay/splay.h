@@ -113,6 +113,18 @@ public:
     }
 
     bool remove(const T& e) override {
-        return false;
+        if (this->empty()) {
+            return false;
+        }
+
+        auto x = search(e);
+        if (e != x->val()) {
+            return false;
+        }
+        this->removeAt(x);
+        this->_size--;
+        this->updateHeightUpwards(this->_hot);
+
+        return true;
     }
 };

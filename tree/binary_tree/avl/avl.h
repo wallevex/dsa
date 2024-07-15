@@ -14,7 +14,7 @@ protected:
         return (-2 < bf) && (bf < 2);
     }
 
-    void rebalance(BinaryTreeNode<T>* g) {
+    BinaryTreeNode<T>* rebalance(BinaryTreeNode<T>* g) {
         auto higher = [](BinaryTreeNode<T>* nd) -> Dir {
             if (nd->leftChild()->height() > nd->leftChild()->height()) {
                 return LEFT;
@@ -52,6 +52,8 @@ protected:
         } else {
             r->connectAsChild(gg, gdir);
         }
+
+        return r;
     }
 public:
     BinaryTreeNode<T>* search(const T& e) {
@@ -85,6 +87,21 @@ public:
     }
 
     bool remove(const T& e) override {
-        return false;
+        auto x = search(e);
+        if (x == nullptr) {
+            return false;
+        }
+        this->removeAt(x);
+        this->_size--;
+
+        for (auto g = this->_hot; g != nullptr; g = g->parent()) {
+            if (!isBalanced(g)) {
+                g = rebalance(g);
+            } else {
+                this->updateHeight(g);
+            }
+        }
+
+        return true;
     }
 };
