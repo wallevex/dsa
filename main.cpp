@@ -6,6 +6,25 @@
 
 using namespace std;
 
+void testBST() {
+    BST<int> bst;
+    int arr[8] = {36, 27, 58, 6, 53, 64, 40, 46};
+    for (auto x : arr) {
+        bst.insert(x);
+    }
+    bst.remove(36);
+
+    auto visit = [](BinaryTreeNode<int>* v) {
+        if (v->parent() == nullptr) {
+            printf("[%d]\n", v->val());
+        } else {
+            printf("[%d <- %d]\n", v->parent()->val(), v->val());
+        }
+    };
+    printf("after remove 36, traverse level result:\n");
+    bst.traverseLevel(visit);
+}
+
 void testAVL() {
     AVL<int> avl;
     for (int i = 1; i <= 10; i++) {
@@ -45,7 +64,8 @@ void testSplay() {
 }
 
 int main() {
+    testBST();
     // testAVL();
-    testSplay();
+    // testSplay();
     return 0;
 }

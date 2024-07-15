@@ -32,6 +32,8 @@ public:
 
     T val() const { return _val; }
 
+    void updateVal(T v) { _val = v; }
+
     BinaryTreeNode<T>* parent() { return _parent; }   
 
     BinaryTreeNode<T>* leftChild() { return _lc; }

@@ -27,8 +27,51 @@ protected:
 
         return b;
     }
+
+    //将节点e从树中摘出，但不删除
+    BinaryTreeNode<T>* extract(const T& e) {
+        auto x = search(e);
+        if (x == nullptr) {
+            return nullptr;
+        }
+
+        if (!x->hasLeftChild()) {
+            x->rightChild()->connectAsChild(x->parent(), x->dirAsChild());
+        } else if (!x->hasRightChild()) {
+            x->leftChild()->connectAsChild(x->parent(), x->dirAsChild());
+        } else {
+            auto succ = successor(x);
+            this->_hot = succ->parent();
+            x->updateVal(succ->val());
+            succ->rightChild()->connectAsChild(succ->parent(), succ->dirAsChild());
+            x = succ;
+            x->updateVal(e);
+        }
+
+        x->detach();
+
+        return x;
+    }
 public:
     BST() : _hot(nullptr), _hotc(UNKNOWN) {}
+
+    //返回节点v的直接后继
+    static BinaryTreeNode<T>* successor(BinaryTreeNode<T>* v) {
+        //若v存在右子树，那么后继必然在右子树的最左侧
+        if (v->hasRightChild()) {
+            v = v->rightChild();
+            while (v->hasLeftChild()) {
+                v = v->leftChild();
+            }
+            return v;
+        }
+
+        //若v不存在右子树，那么后继是“将节点v包含于其左子树中的最低祖先”
+        while (v->dirAsChild() == LEFT) {
+            v = v->parent();
+        }
+        return v->parent();
+    }
 
     virtual BinaryTreeNode<T>* search(const T& e) {
         auto v = this->_root;
@@ -69,6 +112,12 @@ public:
     }
 
     virtual bool remove(const T& e) {
-        return false;
+        auto x = extract(e);
+        if (x == nullptr) {
+            return false;
+        }
+        delete(x);
+        this->updateHeightUpwards(this->_hot);
+        return true;
     }
 };
