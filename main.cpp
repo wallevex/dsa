@@ -3,6 +3,8 @@
 #include "tree/binary_tree/avl/avl.h"
 #include "tree/binary_tree/splay/splay.h"
 #include "tree/binary_tree/rbt/rbt.h"
+#include "priority_queue/priority_queue.h"
+#include "binary_heap/binary_heap.h"
 
 using namespace std;
 
@@ -69,9 +71,25 @@ void testSplay() {
     splay.traverseLevel(visit);
 }
 
+void testPriorityQueue() {
+    PriorityQueue<int>* pq = new BinaryHeap<int>();
+    for (int i = 1; i <= 10; i++) {
+        pq->push(i);
+    }
+    while (!pq->empty()) {
+        auto x = pq->pop();
+        printf("[%d] ", x);
+    }
+}
+
 int main() {
+    // printf("========== BST TEST ==========\n");
     // testBST();
+    // printf("========== AVL TEST ==========\n");
     // testAVL();
-    testSplay();
+    // printf("========== Splay TEST ==========\n");
+    // testSplay();
+    printf("========== Priority Queue TEST ==========\n");
+    testPriorityQueue();
     return 0;
 }

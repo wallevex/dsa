@@ -3,4 +3,4 @@ project(dsa)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(main main.cpp)
+add_executable(dsa main.cpp)
