@@ -4,7 +4,8 @@
 #include "tree/binary_tree/splay/splay.h"
 #include "tree/binary_tree/rbt/rbt.h"
 #include "priority_queue/priority_queue.h"
-#include "binary_heap/binary_heap.h"
+#include "complete_binary_heap/complete_binary_heap.h"
+#include "left_heap/left_heap.h"
 
 using namespace std;
 
@@ -71,10 +72,20 @@ void testSplay() {
     splay.traverseLevel(visit);
 }
 
-void testPriorityQueue() {
-    PriorityQueue<int>* pq = new BinaryHeap<int>();
-    for (int i = 1; i <= 10; i++) {
-        pq->push(i);
+void testCompleteBinaryHeap() {
+    vector<int> seq = {2, 1, 6, 3, 9, 7, 4, 8, 5};
+    PriorityQueue<int>* pq = new CompleteBinaryHeap<int>(&seq);
+    while (!pq->empty()) {
+        auto x = pq->pop();
+        printf("[%d] ", x);
+    }
+}
+
+void testLeftHeap() {
+    vector<int> seq = {2, 1, 6, 3, 9, 7, 4, 8, 5};
+    PriorityQueue<int>* pq = new LeftHeap<int>();
+    for (auto x : seq) {
+        pq->push(x);
     }
     while (!pq->empty()) {
         auto x = pq->pop();
@@ -83,13 +94,15 @@ void testPriorityQueue() {
 }
 
 int main() {
-    // printf("========== BST TEST ==========\n");
+    // printf("==================== BST TEST ====================\n");
     // testBST();
-    // printf("========== AVL TEST ==========\n");
+    // printf("==================== AVL TEST ====================\n");
     // testAVL();
-    // printf("========== Splay TEST ==========\n");
+    // printf("==================== Splay TEST ====================\n");
     // testSplay();
-    printf("========== Priority Queue TEST ==========\n");
-    testPriorityQueue();
+    // printf("==================== Complete Binary Heap TEST ====================\n");
+    // testCompleteBinaryHeap();
+    printf("==================== Left Heap TEST ====================\n");
+    testLeftHeap();
     return 0;
 }
