@@ -2,17 +2,16 @@
 // Created by huhaolong on 2024/7/16.
 //
 
-#ifndef BINARY_HEAP_H
-#define BINARY_HEAP_H
+#pragma once
 
 #include "../priority_queue/priority_queue.h"
 #include <vector>
 #include <algorithm>
 #include <cstdio>
 
-template <typename T> class BinaryHeap : public PriorityQueue<T> {
+template <typename T> class CompleteBinaryHeap : public PriorityQueue<T> {
 protected:
-    std::vector<T> _heap;
+    std::vector<T> _seq;
 
     //pidx=floor((idx-1)/2)
     static int parentIndexOf(int idx) {
@@ -27,7 +26,7 @@ protected:
     static int rightChildIndexOf(int idx) { return 2 * idx + 2; }
 
     bool indexInHeap(int idx) const {
-        int sz = _heap.size();
+        int sz = _seq.size();
         return 0 <= idx && idx < sz;
     }
 
@@ -44,16 +43,16 @@ protected:
         if (!indexInHeap(rci)) {
             return lci;
         }
-        return _heap[lci] > _heap[rci] ? lci : rci;
+        return _seq[lci] > _seq[rci] ? lci : rci;
     }
 
     int percolateUp(int idx) {
         while (0 < idx) {
             auto pidx = parentIndexOf(idx);
-            if (_heap[idx] < _heap[pidx]) {
+            if (_seq[idx] < _seq[pidx]) {
                 break;
             }
-            std::swap(_heap[idx], _heap[pidx]);
+            std::swap(_seq[idx], _seq[pidx]);
             idx = pidx;
         }
         return idx;
@@ -62,42 +61,49 @@ protected:
     int percolateDown(int idx) {
         while (hasChild(idx)) {
             auto cidx = greaterChildIndexOf(idx);
-            if (_heap[idx] > _heap[cidx]) {
+            if (_seq[idx] > _seq[cidx]) {
                 break;
             }
-            std::swap(_heap[idx], _heap[cidx]);
+            std::swap(_seq[idx], _seq[cidx]);
             idx = cidx;
         }
         return idx;
     }
 public:
-    BinaryHeap() { _heap = std::vector<T>(0); }
-    BinaryHeap(unsigned int n) {}
+    CompleteBinaryHeap() { _seq = std::vector<T>(0); }
+
+    CompleteBinaryHeap(std::vector<T>* const seq) {
+        _seq = *seq;
+
+        //Floyd建堆算法，时间复杂度为O(n)
+        //可以参考https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986773?channel=i.area.learn_title
+        for (int idx = _seq.size() / 2 - 1; 0 <= idx; idx--) {
+            percolateDown(idx);
+        }
+    }
 
     unsigned int size() const override {
-        return _heap.size();
+        return _seq.size();
     }
 
     bool empty() const override {
-        return _heap.empty();
+        return _seq.empty();
     }
 
     void push(const T& e) override {
-        _heap.push_back(e);
-        percolateUp(_heap.size() - 1);
+        _seq.push_back(e);
+        percolateUp(_seq.size() - 1);
     }
 
     T pop() override {
-        auto top = _heap.front();
-        _heap.front() = _heap.back();
-        _heap.pop_back();
+        auto top = _seq.front();
+        _seq.front() = _seq.back();
+        _seq.pop_back();
         percolateDown(0);
         return top;
     }
 
     T top() const override {
-        return _heap.front();
+        return _seq.front();
     }
 };
-
-#endif //BINARY_HEAP_H

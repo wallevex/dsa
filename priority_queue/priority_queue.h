@@ -2,8 +2,7 @@
 // Created by huhaolong on 2024/7/16.
 //
 
-#ifndef PRORITY_QUEUE_H
-#define PRORITY_QUEUE_H
+#pragma once
 
 template <typename T> class PriorityQueue {
 public:
@@ -13,6 +12,3 @@ public:
     virtual T pop() = 0;
     virtual T top() const = 0;
 };
-
-#endif //PRORITY_QUEUE_H
-

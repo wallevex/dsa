@@ -15,20 +15,29 @@ protected:
     BinaryTreeNode<T>* _lc;
     BinaryTreeNode<T>* _rc;
     int _height;
+    int _npl;
 public:
-    BinaryTreeNode(T e) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(0) {}
+    BinaryTreeNode(T e, int h = 0, int l = 1) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(h), _npl(l) {}
 
     int height() const {
         if (this == nullptr) { // 特殊处理空节点，很奇怪
             return -1;
         }
-
         return _height;
     }
 
     // 高度这种涉及到整棵树的全局性信息，计算方法对单个节点而言应该是不可见的
     // 节点只负责直接写覆盖即可
     void updateHeight(int h) { _height = h; }
+
+    int npl() const {
+        if (this == nullptr) {
+            return 0;
+        }
+        return _npl;
+    }
+
+    void updateNpl(int l) { _npl = l; }
 
     T val() const { return _val; }
 
@@ -74,6 +83,10 @@ public:
         } else if (dir == RIGHT) {
             connectAsRightChild(p);
         }
+    }
+
+    void swapChildren() {
+        std::swap(_lc, _rc);
     }
 
     // 将当前节点和父节点断开
@@ -165,7 +178,19 @@ protected:
         traverseInFrom(start->rightChild(), visit);
     }
 public:
-    BinaryTree() : _size(0), _root(nullptr) {}
+    BinaryTree(BinaryTreeNode<T>* r = nullptr) {
+        _root = r;
+        if (r == nullptr) {
+            _size = 0;
+        } else {
+            unsigned int sz = 0;
+            auto visit = [&](BinaryTreeNode<T>* v) {
+                sz++;
+            };
+            traverseLevelFrom(r, visit);
+            _size = sz;
+        }
+    }
     ~BinaryTree() {
         if (0 < _size) {
             removeSubTree(_root); 

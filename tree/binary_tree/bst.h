@@ -8,7 +8,7 @@ protected:
     Dir _hotc; // 查找的最后一个节点相对于父节点的位置
 
     //可以简化rebalance的3+4子树重构算法
-    //参考https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986336?channel=i.area.learn_title
+    //参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986336?channel=i.area.learn_title
     static BinaryTreeNode<T>* connect34(BinaryTreeNode<T>* a, BinaryTreeNode<T>* b, BinaryTreeNode<T>* c,
                                 BinaryTreeNode<T>* T0, BinaryTreeNode<T>* T1, BinaryTreeNode<T>* T2, BinaryTreeNode<T>* T3) {
         T0->connectAsLeftChild(a);
@@ -34,14 +34,14 @@ protected:
         if (!v->hasRightChild()) {
             r = v->leftChild();
             r->connectAsChild(v->parent(), v->dirAsChild());
-            delete(v);
+            delete v;
         } else {
             r = v;
             auto succ = successorOf(v);
             this->_hot = succ->parent();
             v->updateVal(succ->val());
             succ->rightChild()->connectAsChild(succ->parent(), succ->dirAsChild());
-            delete(succ);
+            delete succ;
         }
 
         if (!r->hasParent()) {
