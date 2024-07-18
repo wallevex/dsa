@@ -3,4 +3,5 @@ project(dsa)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(dsa main.cpp)
+add_executable(dsa main.cpp
+        string_match/kmp/kmp.cpp)

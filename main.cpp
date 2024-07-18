@@ -9,6 +9,8 @@
 
 using namespace std;
 
+int match(std::string T, std::string P);
+
 void testBST() {
     BST<int> bst;
     int arr[8] = {36, 27, 58, 6, 53, 64, 40, 46};
@@ -93,6 +95,12 @@ void testLeftHeap() {
     }
 }
 
+void testStingMatch_kmp() {
+    string T = "hello_chinchilla_world";
+    string P = "chinchilla";
+    printf("found '%s' in '%s' at %d", P.c_str(), T.c_str(), match(T, P));
+}
+
 int main() {
     // printf("==================== BST TEST ====================\n");
     // testBST();
@@ -102,7 +110,8 @@ int main() {
     // testSplay();
     // printf("==================== Complete Binary Heap TEST ====================\n");
     // testCompleteBinaryHeap();
-    printf("==================== Left Heap TEST ====================\n");
-    testLeftHeap();
+    // printf("==================== Left Heap TEST ====================\n");
+    // testLeftHeap();
+    testStingMatch_kmp();
     return 0;
 }
