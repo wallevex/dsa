@@ -76,7 +76,7 @@ public:
         _seq = *seq;
 
         //Floyd建堆算法，时间复杂度为O(n)
-        //可以参考https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986773?channel=i.area.learn_title
+        //可以参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986773?channel=i.area.learn_title
         for (int idx = _seq.size() / 2 - 1; 0 <= idx; idx--) {
             percolateDown(idx);
         }
