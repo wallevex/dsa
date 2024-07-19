@@ -6,10 +6,11 @@
 #include "priority_queue/priority_queue.h"
 #include "complete_binary_heap/complete_binary_heap.h"
 #include "left_heap/left_heap.h"
+#include "string_match/string_match.h"
 
 using namespace std;
 
-int match(std::string T, std::string P);
+
 
 void testBST() {
     BST<int> bst;
@@ -95,10 +96,21 @@ void testLeftHeap() {
     }
 }
 
-void testStingMatch_kmp() {
-    string T = "hello_chinchilla_world";
-    string P = "chinchilla";
-    printf("found '%s' in '%s' at %d", P.c_str(), T.c_str(), match(T, P));
+void testBuildNext() {
+    //p='HHFBHHFHHFBSHF'
+    //优化前p的next数组=[-1, 0, 1, 0, 0, 1, 2, 3, 1, 2, 3, 4, 0, 1]
+    //优化后p的next数组=[-1, -1, 1, 0, -1, -1, 1, 3, -1, 1, 0, 4, -1, 1]
+    string p = "HHFBHHFHHFBSHF";
+    auto nextv2 = buildNextV2(p);
+    for (auto x : nextv2) {
+        printf("%d ", x);
+    }
+}
+
+void testStingMatch_KMP() {
+    string t = "000100001";
+    string p = "00001";
+    printf("found '%s' in '%s' at %d\n", p.c_str(), t.c_str(), match_KMP(t, p));
 }
 
 int main() {
@@ -112,6 +124,9 @@ int main() {
     // testCompleteBinaryHeap();
     // printf("==================== Left Heap TEST ====================\n");
     // testLeftHeap();
-    testStingMatch_kmp();
+    printf("==================== BuildNext TEST ====================\n");
+    testBuildNext();
+    // printf("==================== KMP TEST ====================\n");
+    // testStingMatch_KMP();
     return 0;
 }
