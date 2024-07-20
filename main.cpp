@@ -107,26 +107,34 @@ void testBuildNext() {
     }
 }
 
-void testStingMatch_KMP() {
+void testStringMatch_KMP() {
     string t = "000100001";
     string p = "00001";
     printf("found '%s' in '%s' at %d\n", p.c_str(), t.c_str(), match_KMP(t, p));
 }
 
+void testStringMatch_BM() {
+    string t = "ICED RICE PRICE";
+    string p = "RICE";
+    printf("found '%s' in '%s' at %d\n", p.c_str(), t.c_str(), match_BM(t, p));
+}
+
 int main() {
-    // printf("==================== BST TEST ====================\n");
+    // printf("\n==================== BST TEST ====================\n");
     // testBST();
-    // printf("==================== AVL TEST ====================\n");
+    // printf("\n==================== AVL TEST ====================\n");
     // testAVL();
-    // printf("==================== Splay TEST ====================\n");
+    // printf("\n==================== Splay TEST ====================\n");
     // testSplay();
-    // printf("==================== Complete Binary Heap TEST ====================\n");
+    // printf("\n==================== Complete Binary Heap TEST ====================\n");
     // testCompleteBinaryHeap();
-    // printf("==================== Left Heap TEST ====================\n");
+    // printf("\n==================== Left Heap TEST ====================\n");
     // testLeftHeap();
-    printf("==================== BuildNext TEST ====================\n");
-    testBuildNext();
-    // printf("==================== KMP TEST ====================\n");
-    // testStingMatch_KMP();
+    // printf("\n==================== BuildNext TEST ====================\n");
+    // testBuildNext();
+    // printf("\n==================== KMP TEST ====================\n");
+    // testStringMatch_KMP();
+    printf("\n==================== BM TEST ====================\n");
+    testStringMatch_BM();
     return 0;
 }
