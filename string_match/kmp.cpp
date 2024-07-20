@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-//根据自己理解写的，最普通没有优化的buildNext算法
+// 根据自己理解写的，最普通没有优化的buildNext算法
 std::vector<int> buildNextV1_Ugly(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
 
@@ -25,9 +25,9 @@ std::vector<int> buildNextV1_Ugly(std::string p) {
     return next;
 }
 
-//根据自己理解写的，优化后的buildNext算法（非常丑陋）
-//优化的原因和方法可参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986921?channel=i.area.learn_title
-//pmt: Partial Match Table
+// 根据自己理解写的，优化后的buildNext算法（非常丑陋）
+// 优化的原因和方法可参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986921?channel=i.area.learn_title
+// pmt: Partial Match Table
 std::vector<int> buildNextV2_Ugly(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
 
@@ -56,13 +56,13 @@ std::vector<int> buildNextV2_Ugly(std::string p) {
     return next;
 }
 
-//邓俊辉版本的buildNext优化版
-//个人认为极其抽象，主要是没有解释t代表啥。
-//实际上，t表示就是[0,j)的真前缀和真后缀的最长匹配，该算法使用迭代对t进行更新。
-//1、当p[j] == p[t]时，t_{i+1}=t_{i}+1很好理解；
-//2、当p[j] != p[t]时，t=next[t]这一步看起来好像是错的，由于next语义的改变，next[t]看起来会错过正确的t_{i+1}候选？
-//实际上稍加观察会发现，我们既然已经知道p[t] != p[j]，那么要找的下一个t'必然要满足p[t'] != p[t]（否则仍然会与p[j]不相等）。
-//然而这恰好就是next数组所表达的语义！！t_{i}经过next的不断迭代后必然能得到t_{i+1}！！
+// 邓俊辉版本的buildNext优化版
+// 个人认为极其抽象，主要是没有解释t代表啥。
+// 实际上，t表示就是[0,j)的真前缀和真后缀的最长匹配，该算法使用迭代对t进行更新。
+// 1、当p[j] == p[t]时，t_{i+1}=t_{i}+1很好理解；
+// 2、当p[j] != p[t]时，t=next[t]这一步看起来好像是错的，由于next语义的改变，next[t]看起来会错过正确的t_{i+1}候选？
+// 实际上稍加观察会发现，我们既然已经知道p[t] != p[j]，那么要找的下一个t'必然要满足p[t'] != p[t]（否则仍然会与p[j]不相等）。
+// 然而这恰好就是next数组所表达的语义！！t_{i}经过next的不断迭代后必然能得到t_{i+1}！！
 std::vector<int> buildNextV2_TsingHuaDSA(std::string p) {
     int m = p.length();
     int j = 0;
@@ -80,7 +80,7 @@ std::vector<int> buildNextV2_TsingHuaDSA(std::string p) {
     return next;
 }
 
-//根据buildNextV2_TsingHuaDSA，更容易理解、更简洁的优化版buildNext
+// 根据buildNextV2_TsingHuaDSA，更容易理解、更简洁的优化版buildNext
 std::vector<int> buildNextV2(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
 
@@ -99,6 +99,7 @@ std::vector<int> buildNextV2(std::string p) {
     return next;
 }
 
+// Knuth-Morris-Pratt match
 int match_KMP(std::string t, std::string p) {
     auto next = buildNextV2(p);
     int n = t.length(), m = p.length();

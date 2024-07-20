@@ -14,12 +14,12 @@ std::vector<int> buildBC(std::string p) {
     return bc;
 }
 
-//SS: Suffix Size
-//ss[i]表示p[0,j]的所有后缀与p[0,m-1]的所有后缀的最大匹配长度
-//即ss[i] = max{ 0 <= s <= j + 1 | p(j-s, j] = p[m-s, m) }
-//暴力解法的时间复杂度为O(n^2)；但实际上可以用动态规划去做，时间复杂度为O(n)
-//该dp解法参考《邓俊辉数据结构》11.4.4节ss[]表的构造
-//下面的lo表示当前最靠左（最小）的“后缀区间左端点”，hi为对应于lo的“后缀区间右端点”
+// SS: Suffix Size
+// ss[i]表示p[0,j]的所有后缀与p[0,m-1]的所有后缀的最大匹配长度
+// 即ss[i] = max{ 0 <= s <= j + 1 | p(j-s, j] = p[m-s, m) }
+// 暴力解法的时间复杂度为O(n^2)；但实际上可以用动态规划去做，时间复杂度为O(n)
+// 该dp解法参考《邓俊辉数据结构》11.4.4节ss[]表的构造
+// 下面的lo表示当前最靠左（最小）的“后缀区间左端点”，hi为对应于lo的“后缀区间右端点”
 std::vector<int> buildSS(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
 
@@ -41,12 +41,12 @@ std::vector<int> buildSS(std::string p) {
     return ss;
 }
 
-//感觉是一个最难理解、根本无法自己想出来的算法。。。
-//参考《邓俊辉数据结构》11.4.4由ss[]表构造gs[]表
-//这个方法主要是将ss[j]分为两种贡献，然后将每种贡献赋到每个以它为候选者的gs[i]上，这样就相当于反向完成了所有gs[i]的设置
-//这里最最最难注意到的是：
-//1、gs[m - ss[j] - 1] = m - j - 1一定不会覆盖掉第一种候选情况，不然会出现前缀大于后缀的情况矛盾！！
-//2、p[m - ss[j] - 1] != p[j - ss[j]]一定成立，否则MS[j]可以增加1矛盾！！
+// 感觉是一个最难理解、根本无法自己想出来的算法。。。
+// 参考《邓俊辉数据结构》11.4.4由ss[]表构造gs[]表
+// 这个方法主要是将ss[j]分为两种贡献，然后将每种贡献赋到每个以它为候选者的gs[i]上，这样就相当于反向完成了所有gs[i]的设置
+// 这里最最最难注意到的是：
+// 1、gs[m - ss[j] - 1] = m - j - 1一定不会覆盖掉第一种候选情况，不然会出现前缀大于后缀的情况矛盾！！
+// 2、p[m - ss[j] - 1] != p[j - ss[j]]一定成立，否则MS[j]可以增加1矛盾！！
 std::vector<int> buildGS(std::string p) {
     auto ss = buildSS(p);
     int m = p.length();
@@ -65,6 +65,7 @@ std::vector<int> buildGS(std::string p) {
     return gs;
 }
 
+// Boyer-Moore match
 int match_BM(std::string t, std::string p) {
     int n = t.length(), m = p.length();
     auto bc = buildBC(p);
