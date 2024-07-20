@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-
 //根据自己理解写的，最普通没有优化的buildNext算法
 std::vector<int> buildNextV1_Ugly(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
@@ -62,14 +61,14 @@ std::vector<int> buildNextV2_Ugly(std::string p) {
 //实际上，t表示就是[0,j)的真前缀和真后缀的最长匹配，该算法使用迭代对t进行更新。
 //1、当p[j] == p[t]时，t_{i+1}=t_{i}+1很好理解；
 //2、当p[j] != p[t]时，t=next[t]这一步看起来好像是错的，由于next语义的改变，next[t]看起来会错过正确的t_{i+1}候选？
-//实际上稍加观察会发现，我们既然已经知道p[t] != p[j]，那么要找的下一个t必然要满足p[t'] != p[t]（否则仍然会与p[j]不相等）。
+//实际上稍加观察会发现，我们既然已经知道p[t] != p[j]，那么要找的下一个t'必然要满足p[t'] != p[t]（否则仍然会与p[j]不相等）。
 //然而这恰好就是next数组所表达的语义！！t_{i}经过next的不断迭代后必然能得到t_{i+1}！！
 std::vector<int> buildNextV2_TsingHuaDSA(std::string p) {
-    int n = p.length();
+    int m = p.length();
     int j = 0;
-    std::vector<int> next(n);
+    std::vector<int> next(m);
     int t = next[0] = -1;
-    while (j < n - 1) {
+    while (j < m - 1) {
         if (0 > t || p[j] == p[t]) {
             j++; t++;
             printf("j=%d,t=%d\n", j, t); //这里打印的结果与优化前的版本V1的next表是一致的
@@ -85,16 +84,16 @@ std::vector<int> buildNextV2_TsingHuaDSA(std::string p) {
 std::vector<int> buildNextV2(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }
 
-    int n = p.length();
-    std::vector<int> next(n);
+    int m = p.length();
+    std::vector<int> next(m);
     int pm = next[0] = -1;
-    for (int i = 1; i < n; i++) {
-        while (0 <= pm && (p[pm] != p[i - 1])) {
+    for (int j = 1; j < m; j++) {
+        while (0 <= pm && (p[pm] != p[j - 1])) {
             pm = next[pm];
         }
         pm += 1;
-        printf("pm[%d]=%d\n", i, pm);
-        next[i] = (p[pm] != p[i] ? pm : next[pm]);
+        printf("pm[%d]=%d\n", j, pm);
+        next[j] = (p[pm] != p[j] ? pm : next[pm]);
     }
 
     return next;
