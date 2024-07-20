@@ -7,10 +7,11 @@
 #include "complete_binary_heap/complete_binary_heap.h"
 #include "left_heap/left_heap.h"
 #include "string_match/string_match.h"
+#include "sort/sort.h"
+#include "majority/majority.h"
+#include "select/quick_select.h"
 
 using namespace std;
-
-
 
 void testBST() {
     BST<int> bst;
@@ -119,6 +120,23 @@ void testStringMatch_BM() {
     printf("found '%s' in '%s' at %d\n", p.c_str(), t.c_str(), match_BM(t, p));
 }
 
+void testMajority() {
+    vector<int> arr = {2,3,3,4,3,3,5,3,1,3,2};
+    auto ret = majority(arr);
+    if (ret.first == false) {
+        printf("majority not exists\n");
+    } else {
+        printf("majority is %d\n", ret.second);
+    }
+}
+
+void testQuickSelect() {
+    vector<int> arr = {9, 8, 5, 3, 1, 6, 2, 7, 4, 5};
+    int k = 6;
+    auto x = quickSelect(arr, k);
+    printf("arr[%d]=%d\n", k, x);
+}
+
 int main() {
     // printf("\n==================== BST TEST ====================\n");
     // testBST();
@@ -136,5 +154,9 @@ int main() {
     // testStringMatch_KMP();
     printf("\n==================== BM TEST ====================\n");
     testStringMatch_BM();
+    printf("\n==================== Majority TEST ====================\n");
+    testMajority();
+    printf("\n==================== Quick Select TEST ====================\n");
+    testQuickSelect();
     return 0;
 }
