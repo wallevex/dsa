@@ -6,5 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(dsa main.cpp
         string_match/kmp.cpp
         string_match/bm.cpp
-        sort/sort.cpp
         string_match/kr.cpp)

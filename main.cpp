@@ -137,6 +137,14 @@ void testQuickSelect() {
     printf("arr[%d]=%d\n", k, x);
 }
 
+void testSort() {
+    vector<int> arr = {2, 3, 4, 5, 6, 7, 8, 9, 1};
+    quickSort(arr);
+    for (auto x : arr) {
+        printf("%d ", x);
+    }
+}
+
 int main() {
     // printf("\n==================== BST TEST ====================\n");
     // testBST();
@@ -152,11 +160,13 @@ int main() {
     // testBuildNext();
     // printf("\n==================== KMP TEST ====================\n");
     // testStringMatch_KMP();
-    printf("\n==================== BM TEST ====================\n");
-    testStringMatch_BM();
-    printf("\n==================== Majority TEST ====================\n");
-    testMajority();
-    printf("\n==================== Quick Select TEST ====================\n");
-    testQuickSelect();
+    // printf("\n==================== BM TEST ====================\n");
+    // testStringMatch_BM();
+    // printf("\n==================== Majority TEST ====================\n");
+    // testMajority();
+    // printf("\n==================== Quick Select TEST ====================\n");
+    // testQuickSelect();
+    printf("\n==================== Sort TEST ====================\n");
+    testSort();
     return 0;
 }
