@@ -7,9 +7,9 @@
 #include "complete_binary_heap/complete_binary_heap.h"
 #include "left_heap/left_heap.h"
 #include "string_match/string_match.h"
-#include "sort/sort.h"
 #include "majority/majority.h"
 #include "select/quick_select.h"
+#include "sort/sort.h"
 
 using namespace std;
 
@@ -141,6 +141,20 @@ void testSort() {
     vector<int> arr = {2, 3, 4, 5, 6, 7, 8, 9, 1};
     quickSort(arr);
     for (auto x : arr) {
+        printf("%d ", x);
+    }
+
+    printf("\n");
+    vector<int> arr2 = {11, 4, 14, 3, 10, 0, 15, 1, 9, 6, 8, 7, 13, 2, 12, 5};
+    shellSort(arr2);
+    for (auto x : arr2) {
+        printf("%d ", x);
+    }
+
+    printf("\n");
+    vector<int> arr3 = {10, 9, 20, 6, 12};
+    tournamentSort(arr3);
+    for (auto x : arr3) {
         printf("%d ", x);
     }
 }
