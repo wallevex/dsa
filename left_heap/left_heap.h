@@ -9,11 +9,24 @@
 #include <algorithm>
 #include <cstdio>
 
+template <typename T> class LeftHeapNode: public BinaryTreeNode<T> {
+protected:
+    int _npl;
+public:
+    LeftHeapNode(T e, int h = 0, int l = 1) : BinaryTreeNode<T>(e, h), _npl(l) {}
+    int npl() const { return this == nullptr ? 0 : _npl; }
+    void updateNpl(int l) { _npl = l; }
+
+    LeftHeapNode<T>* parent() override { return static_cast<LeftHeapNode<T>*>(this->_parent); }
+    LeftHeapNode<T>* leftChild() override { return static_cast<LeftHeapNode<T>*>(this->_lc); }
+    LeftHeapNode<T>* rightChild() override { return static_cast<LeftHeapNode<T>*>(this->_rc); }
+};
+
 template <typename T> class LeftHeap : public PriorityQueue<T> {
 protected:
-	BinaryTree<T>* _tree;
+	LeftHeapNode<T>* _root;
 
-    static void updateNpl(BinaryTreeNode<T>* v) {
+    static void updateNpl(LeftHeapNode<T>* v) {
         if (!v->hasRightChild()) {
             v->updateNpl(1);
             return;
@@ -23,7 +36,7 @@ protected:
 
     //左式堆合并算法
     //具体参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986806?channel=i.area.learn_title
-    static BinaryTreeNode<T>* mergeLeftHeapTree(BinaryTreeNode<T>* a, BinaryTreeNode<T>* b) {
+    static LeftHeapNode<T>* mergeLeftHeapTree(LeftHeapNode<T>* a, LeftHeapNode<T>* b) {
         if (a == nullptr) { return b; }
         if (b == nullptr) { return a; }
 
@@ -31,7 +44,7 @@ protected:
             std::swap(a, b);
         }
 
-        auto rc = mergeLeftHeapTree(a->rightChild(), b);
+        LeftHeapNode<T>* rc = mergeLeftHeapTree(a->rightChild(), b);
         rc->connectAsRightChild(a);
         if (a->leftChild()->npl() < rc->npl()) {
             a->swapChildren();
@@ -41,45 +54,47 @@ protected:
         return a;
     }
 public:
-    LeftHeap() { _tree = new BinaryTree<T>(); }
+    LeftHeap() { _root = nullptr; }
 
     LeftHeap(std::vector<T>* const seq) {
         //TODO 是否可以用Floyd算法建左式堆
     }
 
     LeftHeap(LeftHeap<T>* a, LeftHeap<T>* b) {
-        auto c = mergeLeftHeapTree(a->_tree->root(), b->_tree->root());
-        _tree = new BinaryTree<T>(c);
+        _root = mergeLeftHeapTree(a->_root, b->_root);
     }
 
     unsigned int size() const override {
-        return _tree->size();
+        unsigned int sz = 0;
+        auto visit = [&](BinaryTreeNode<T>* v) {
+            sz++;
+        };
+        BinaryTree<T>::traverseLevelFrom(_root, visit);
+        return sz;
     }
 
     bool empty() const override {
-        return _tree->empty();
+        return _root == nullptr;
     }
 
     void push(const T& e) override {
-        auto c = mergeLeftHeapTree(_tree->root(), new BinaryTreeNode<T>(e));
-        _tree = new BinaryTree<T>(c);
+        _root = mergeLeftHeapTree(_root, new LeftHeapNode<T>(e));
     }
 
     T pop() override {
-        auto lc = _tree->root()->leftChild();
+        LeftHeapNode<T>* lc = _root->leftChild();
         if (lc != nullptr) lc->detach();
-        auto rc = _tree->root()->rightChild();
+        LeftHeapNode<T>* rc = _root->rightChild();
         if (rc != nullptr) rc->detach();
-        auto top = _tree->root()->val();
-        delete _tree->root();
+        auto top = _root->val();
+        delete _root;
 
-        auto c = mergeLeftHeapTree(lc, rc);
-        _tree = new BinaryTree<T>(c);
+        _root = mergeLeftHeapTree(lc, rc);
 
         return top;
     }
 
     T top() const override {
-        return _tree->root()->val();
+        return _root->val();
     }
 };

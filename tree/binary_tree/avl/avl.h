@@ -15,45 +15,11 @@ protected:
     }
 
     BinaryTreeNode<T>* rebalance(BinaryTreeNode<T>* g) {
-        auto higher = [](BinaryTreeNode<T>* nd) -> Dir {
-            if (nd->leftChild()->height() > nd->leftChild()->height()) {
-                return LEFT;
-            }
-            return RIGHT;
+        auto higher = [](BinaryTreeNode<T>* p) -> BinaryTreeNode<T>* {
+            return p->leftChild()->height() > p->rightChild()->height() ? p->leftChild() : p->rightChild();
         };
-
-        auto gg = g->parent(); // 保存g的父节点信息，以及g与其父节点的关系
-        auto gdir = g->dirAsChild();
-        BinaryTreeNode<T>* r;
-
-        if (higher(g) == LEFT) {
-            auto p = g->leftChild();
-            if (higher(p) == LEFT) { //zig-zig形式（右旋）
-                auto v = p->leftChild();
-                r = BST<T>::connect34(v, p, g, v->leftChild(), v->rightChild(), p->rightChild(), g->rightChild());
-            } else { //zig-zag形式（左旋+右旋）
-                auto v = p->rightChild();
-                r = BST<T>::connect34(p, v, g, p->leftChild(), v->leftChild(), v->rightChild(), g->rightChild());
-            }
-        } else {
-            auto p = g->rightChild();
-            if (higher(p) == RIGHT) { //zag-zag形式（左旋）
-                auto v = p->rightChild();
-                r = BST<T>::connect34(g, p, v, g->leftChild(), p->leftChild(), v->leftChild(), v->rightChild());
-            } else { //zag-zig形式（右旋+左旋）
-                auto v = p->leftChild();
-                r = BST<T>::connect34(g, v, p, g->leftChild(), v->leftChild(), v->rightChild(), p->rightChild());
-            }
-        }
-
-        // 将3+4重构后的根节点重新连接回g之前的父节点
-        if (gg == nullptr) { //这种情况表明根节点发生了旋转，需要更新根节点
-            this->_root = r;
-        } else {
-            r->connectAsChild(gg, gdir);
-        }
-
-        return r;
+        auto v = higher(higher(g));
+        return this->rotateVPG(v);
     }
 public:
     BinaryTreeNode<T>* search(const T& e) {

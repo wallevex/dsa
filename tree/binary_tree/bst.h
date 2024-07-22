@@ -7,7 +7,7 @@ protected:
     BinaryTreeNode<T>* _hot; //查找的最后一个节点的父节点
     Dir _hotc; // 查找的最后一个节点相对于父节点的位置
 
-    //可以简化rebalance的3+4子树重构算法
+    //可以简化rotate的3+4子树重构算法
     //参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986336?channel=i.area.learn_title
     static BinaryTreeNode<T>* connect34(BinaryTreeNode<T>* a, BinaryTreeNode<T>* b, BinaryTreeNode<T>* c,
                                 BinaryTreeNode<T>* T0, BinaryTreeNode<T>* T1, BinaryTreeNode<T>* T2, BinaryTreeNode<T>* T3) {
@@ -26,6 +26,40 @@ protected:
         b->detach();
 
         return b;
+    }
+
+    // 根据v->p->g这一局部子树的形状，对其进行旋转重构
+    // 适用于AVL、RBT
+    BinaryTreeNode<T>* rotateVPG(BinaryTreeNode<T>* v) {
+        auto p = v->parent(); if (p == nullptr) return v;
+        auto g = p->parent(); if (g == nullptr) return p;
+
+        auto gg = g->parent(); // 保存g的父节点信息，以及g与其父节点的关系
+        auto gdir = g->dirAsChild();
+        BinaryTreeNode<T>* r;
+
+        if (p->dirAsChild() == LEFT) {
+            if (v->dirAsChild() == LEFT) { // zig-zig形式（右旋）
+                r = connect34(v, p, g, v->leftChild(), v->rightChild(), p->rightChild(), g->rightChild());
+            } else { // zag-zig形式（左旋+右旋）
+                r = connect34(p, v, g, p->leftChild(), v->leftChild(), v->rightChild(), g->rightChild());
+            }
+        } else {
+            if (v->dirAsChild() == RIGHT) { // zag-zag形式（左旋）
+                r = connect34(g, p, v, g->leftChild(), p->leftChild(), v->leftChild(), v->rightChild());
+            } else { // zig-zag形式（右旋+左旋）
+                r = connect34(g, v, p, g->leftChild(), v->leftChild(), v->rightChild(), p->rightChild());
+            }
+        }
+
+        // 将3+4重构后的根节点重新连接回g之前的父节点
+        if (gg == nullptr) { //这种情况表明根节点发生了旋转，需要更新根节点
+            this->_root = r;
+        } else {
+            r->connectAsChild(gg, gdir);
+        }
+
+        return r;
     }
 
     //将节点v删除并返回新的根

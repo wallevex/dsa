@@ -15,44 +15,23 @@ protected:
     BinaryTreeNode<T>* _lc;
     BinaryTreeNode<T>* _rc;
     int _height;
-    int _npl;
 public:
-    BinaryTreeNode(T e, int h = 0, int l = 1) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(h), _npl(l) {}
-
-    int height() const {
-        if (this == nullptr) { // 特殊处理空节点，很奇怪
-            return -1;
-        }
-        return _height;
-    }
+    BinaryTreeNode(T e, int h = 0) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(h) {}
 
     // 高度这种涉及到整棵树的全局性信息，计算方法对单个节点而言应该是不可见的
     // 节点只负责直接写覆盖即可
+    int height() const { return this == nullptr ? -1 : _height; }
     void updateHeight(int h) { _height = h; }
 
-    int npl() const {
-        if (this == nullptr) {
-            return 0;
-        }
-        return _npl;
-    }
-
-    void updateNpl(int l) { _npl = l; }
-
     T val() const { return _val; }
-
     void updateVal(T v) { _val = v; }
 
-    BinaryTreeNode<T>* parent() { return _parent; }   
-
-    BinaryTreeNode<T>* leftChild() { return _lc; }
-
-    BinaryTreeNode<T>* rightChild() { return _rc; }
+    virtual BinaryTreeNode<T>* parent() { return _parent; }
+    virtual BinaryTreeNode<T>* leftChild() { return _lc; }
+    virtual BinaryTreeNode<T>* rightChild() { return _rc; }
 
     bool hasParent() const { return _parent != nullptr; }
-
     bool hasLeftChild() const { return _lc != nullptr; }
-
     bool hasRightChild() const { return _rc != nullptr; }
 
     //将当前节点作为左孩子连接到父节点p
@@ -155,41 +134,10 @@ protected:
         delete v;
         return n;
     }
-
-    template <typename VST>
-    void traverseLevelFrom(BinaryTreeNode<T>* start, VST& visit) {
-        if (start == nullptr) return;
-        std::queue<BinaryTreeNode<T>*> q;
-        q.push(start);
-        while (!q.empty()) {
-            auto top = q.front();
-            q.pop();
-            visit(top);
-            if (top->hasLeftChild()) q.push(top->leftChild());
-            if (top->hasRightChild()) q.push(top->rightChild());
-        }
-    }
-
-    template <typename VST>
-    void traverseInFrom(BinaryTreeNode<T>* start, VST& visit) {
-        if (start == nullptr) return;
-        traverseInFrom(start->leftChild(), visit);
-        visit(start);
-        traverseInFrom(start->rightChild(), visit);
-    }
 public:
-    BinaryTree(BinaryTreeNode<T>* r = nullptr) {
-        _root = r;
-        if (r == nullptr) {
-            _size = 0;
-        } else {
-            unsigned int sz = 0;
-            auto visit = [&](BinaryTreeNode<T>* v) {
-                sz++;
-            };
-            traverseLevelFrom(r, visit);
-            _size = sz;
-        }
+    BinaryTree() {
+        _root = nullptr;
+        _size = 0;
     }
     ~BinaryTree() {
         if (0 < _size) {
@@ -247,6 +195,28 @@ public:
         auto n = removeFrom(v);
         _size -= n;
         return n;
+    }
+
+    template <typename VST>
+    static void traverseLevelFrom(BinaryTreeNode<T>* start, VST& visit) {
+        if (start == nullptr) return;
+        std::queue<BinaryTreeNode<T>*> q;
+        q.push(start);
+        while (!q.empty()) {
+            auto top = q.front();
+            q.pop();
+            visit(top);
+            if (top->hasLeftChild()) q.push(top->leftChild());
+            if (top->hasRightChild()) q.push(top->rightChild());
+        }
+    }
+
+    template <typename VST>
+    static void traverseInFrom(BinaryTreeNode<T>* start, VST& visit) {
+        if (start == nullptr) return;
+        traverseInFrom(start->leftChild(), visit);
+        visit(start);
+        traverseInFrom(start->rightChild(), visit);
     }
 
     template <typename VST>
