@@ -100,7 +100,7 @@ void testLeftHeap() {
 
 void testRBT() {
     RBT<int> rbt;
-    for (int e = 1; e <= 9; e++) {
+    for (int e = 0; e <= 8; e++) {
         rbt.insert(e);
     }
     auto visit = [](BinaryTreeNode<int>* v) {

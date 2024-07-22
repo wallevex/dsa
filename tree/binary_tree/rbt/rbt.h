@@ -65,7 +65,7 @@ public:
         x->connectAsChild(this->_hot, this->_hotc);
 
         RBTNode<T>* v = static_cast<RBTNode<T>*>(x);
-        while (v->hasParent() && v->parent()->color() == RED) {
+        while (v->color() == RED && (v->hasParent() && v->parent()->color() == RED)) {
             v = solveDoubleRed(v);
         }
         if (v->color() == RED && !v->hasParent()) {
