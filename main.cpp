@@ -3,6 +3,7 @@
 #include "tree/binary_tree/avl/avl.h"
 #include "tree/binary_tree/splay/splay.h"
 #include "tree/binary_tree/rbt/rbt.h"
+#include "tree/btree/btree.h"
 #include "priority_queue/priority_queue.h"
 #include "complete_binary_heap/complete_binary_heap.h"
 #include "left_heap/left_heap.h"
@@ -34,8 +35,8 @@ void testBST() {
 
 void testAVL() {
     AVL<int> avl;
-    for (int i = 1; i <= 10; i++) {
-        avl.insert(i);
+    for (int e = 1; e <= 10; e++) {
+        avl.insert(e);
     }
 
     auto visit = [](BinaryTreeNode<int>* v) {
@@ -55,8 +56,8 @@ void testAVL() {
 
 void testSplay() {
     Splay<int> splay;
-    for (int i = 1; i <= 31; i++) {
-        splay.insert(i);
+    for (int e = 1; e <= 31; e++) {
+        splay.insert(e);
     }
     printf("before search, splay height is: %d\n", splay.height());
     splay.search(1);
@@ -95,6 +96,24 @@ void testLeftHeap() {
         auto x = pq->pop();
         printf("[%d] ", x);
     }
+}
+
+void testRBT() {
+    RBT<int> rbt;
+    for (int e = 1; e <= 9; e++) {
+        rbt.insert(e);
+    }
+    auto visit = [](BinaryTreeNode<int>* v) {
+        RBTNode<int>* vv = static_cast<RBTNode<int>*>(v);
+        char c = vv->color() == BLACK ? 'B' : 'R';
+        if (vv->parent() == nullptr) {
+            printf("[%d%c%d]\n", vv->val(), c, vv->blackHeight());
+        } else {
+            printf("[%d <- %d%c%d]\n", vv->parent()->val(), vv->val(), c, vv->blackHeight());
+        }
+    };
+    printf("traverse level result:\n");
+    rbt.traverseLevel(visit);
 }
 
 void testBuildNext() {
@@ -170,17 +189,19 @@ int main() {
     // testCompleteBinaryHeap();
     // printf("\n==================== Left Heap TEST ====================\n");
     // testLeftHeap();
-    // printf("\n==================== BuildNext TEST ====================\n");
-    // testBuildNext();
-    // printf("\n==================== KMP TEST ====================\n");
-    // testStringMatch_KMP();
-    // printf("\n==================== BM TEST ====================\n");
-    // testStringMatch_BM();
-    // printf("\n==================== Majority TEST ====================\n");
-    // testMajority();
-    // printf("\n==================== Quick Select TEST ====================\n");
-    // testQuickSelect();
-    printf("\n==================== Sort TEST ====================\n");
-    testSort();
+    printf("\n==================== RBT TEST ====================\n");
+    testRBT();
+    // // printf("\n==================== BuildNext TEST ====================\n");
+    // // testBuildNext();
+    // // printf("\n==================== KMP TEST ====================\n");
+    // // testStringMatch_KMP();
+    // // printf("\n==================== BM TEST ====================\n");
+    // // testStringMatch_BM();
+    // // printf("\n==================== Majority TEST ====================\n");
+    // // testMajority();
+    // // printf("\n==================== Quick Select TEST ====================\n");
+    // // testQuickSelect();
+    // printf("\n==================== Sort TEST ====================\n");
+    // testSort();
     return 0;
 }
