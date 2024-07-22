@@ -13,16 +13,8 @@ template <typename T> class CompleteBinaryHeap : public PriorityQueue<T> {
 protected:
     std::vector<T> _seq;
 
-    //pidx=floor((idx-1)/2)
-    static int parentIndexOf(int idx) {
-        if (idx == 0) {
-            return -1;
-        }
-        return (idx - 1) / 2;
-    }
-
+    static int parentIndexOf(int idx) { return idx == 0 ? -1 : (idx - 1) / 2; }
     static int leftChildIndexOf(int idx) { return 2 * idx + 1; }
-
     static int rightChildIndexOf(int idx) { return 2 * idx + 2; }
 
     bool indexInHeap(int idx) const {
@@ -76,7 +68,7 @@ public:
         _seq = *seq;
 
         //Floyd建堆算法，时间复杂度为O(n)
-        //可以参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986773?channel=i.area.learn_title
+        //可以参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986773?channel=i.area.learn_title
         for (int idx = _seq.size() / 2 - 1; 0 <= idx; idx--) {
             percolateDown(idx);
         }

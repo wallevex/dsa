@@ -22,7 +22,7 @@ protected:
     }
 
     //左式堆合并算法
-    //具体参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986806?channel=i.area.learn_title
+    //具体参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986806?channel=i.area.learn_title
     static BinaryTreeNode<T>* mergeLeftHeapTree(BinaryTreeNode<T>* a, BinaryTreeNode<T>* b) {
         if (a == nullptr) { return b; }
         if (b == nullptr) { return a; }

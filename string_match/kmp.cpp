@@ -26,7 +26,7 @@ std::vector<int> buildNextV1_Ugly(std::string p) {
 }
 
 // 根据自己理解写的，优化后的buildNext算法（非常丑陋）
-// 优化的原因和方法可参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986921?channel=i.area.learn_title
+// 优化的原因和方法可参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986921?channel=i.area.learn_title
 // pmt: Partial Match Table
 std::vector<int> buildNextV2_Ugly(std::string p) {
     if (p.empty()) { return std::vector<int>(0); }

@@ -8,7 +8,7 @@
 #include <utility>
 
 // 众数的减治求解法，时间复杂度为O(n)
-// 参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42987133?channel=i.area.learn_title
+// 参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42987133?channel=i.area.learn_title
 template <typename T> std::pair<bool, T> majority(std::vector<T> arr) {
     int n = arr.size();
     T candidate;

@@ -5,7 +5,7 @@
 template<typename T> class Splay : public BST<T> {
 protected:
     //splay双旋操作，将节点v上移至根节点
-    //具体参考 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986405?channel=i.area.learn_title
+    //具体参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986405?channel=i.area.learn_title
     BinaryTreeNode<T>* splay(BinaryTreeNode<T>* v) {
         while (v->hasParent() && v->parent()->hasParent()) {
             auto p = v->parent();
