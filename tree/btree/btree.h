@@ -6,8 +6,9 @@
 
 #include <vector>
 
-template <typename T> class BTreeNode {
-protected:
+template <typename T>
+class BTreeNode {
+private:
     BTreeNode<T>* _parent;
     std::vector<T> _vals;
     std::vector<BTreeNode<T>*> _children;
@@ -17,8 +18,9 @@ public:
     std::vector<BTreeNode<T>*> children() { return _children; }
 };
 
-template <typename T> class BTree {
-protected:
+template <typename T>
+class BTree {
+private:
     unsigned int _size;
     unsigned int _m;
     BTreeNode<T>* _root;

@@ -9,8 +9,9 @@
 #include <algorithm>
 #include <cstdio>
 
-template <typename T> class CompleteBinaryHeap : public PriorityQueue<T> {
-protected:
+template <typename T>
+class CompleteBinaryHeap : public PriorityQueue<T> {
+private:
     std::vector<T> _seq;
 
     static int parentIndexOf(int idx) { return idx == 0 ? -1 : (idx - 1) / 2; }

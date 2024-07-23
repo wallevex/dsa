@@ -6,7 +6,8 @@
 
 #include <vector>
 
-template <typename T> int partition(std::vector<T>& arr, int lo, int hi) {
+template <typename T>
+int partition(std::vector<T>& arr, int lo, int hi) {
     int pivot = arr[lo];
     while (lo < hi) {
         while ((lo < hi) && (pivot <= arr[hi])) { hi--; }
@@ -18,13 +19,15 @@ template <typename T> int partition(std::vector<T>& arr, int lo, int hi) {
     return lo;
 }
 
-template <typename T> void _quickSort(std::vector<T>& arr, int lo, int hi) {
+template <typename T>
+void _quickSort(std::vector<T>& arr, int lo, int hi) {
     if (hi - lo < 2) return;
     int pivot = partition(arr, lo, hi - 1);
     _quickSort(arr, lo, pivot);
     _quickSort(arr, pivot + 1, hi);
 }
 
-template <typename T> void quickSort(std::vector<T>& arr) {
+template <typename T>
+void quickSort(std::vector<T>& arr) {
     _quickSort(arr, 0, arr.size());
 }
