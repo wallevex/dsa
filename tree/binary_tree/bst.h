@@ -29,8 +29,8 @@ protected:
     // 根据v->p->g这一局部子树的形状，对其进行旋转重构
     // 适用于AVL、RBT
     BinaryTreeNode<T>* rotateVPG(BinaryTreeNode<T>* v) {
-        auto p = v->parent(); if (p == nullptr) return v;
-        auto g = p->parent(); if (g == nullptr) return p;
+        auto p = v->parent();
+        auto g = p->parent();
 
         auto gg = g->parent(); // 保存g的父节点信息，以及g与其父节点的关系
         auto gdir = g->dirAsChild();

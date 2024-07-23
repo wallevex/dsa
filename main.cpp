@@ -35,15 +35,16 @@ void testBST() {
 
 void testAVL() {
     AVL<int> avl;
-    for (int e = 1; e <= 10; e++) {
+    for (int e = 1; e <= 9; e++) {
         avl.insert(e);
     }
 
     auto visit = [](BinaryTreeNode<int>* v) {
+        AVLNode<int>* vv = static_cast<AVLNode<int>*>(v);
         if (v->parent() == nullptr) {
-            printf("[%d]\n", v->val());
+            printf("[%dH%d]\n", vv->val(), vv->height());
         } else {
-            printf("[%d <- %d]\n", v->parent()->val(), v->val());
+            printf("[%d <- %dH%d]\n", vv->parent()->val(), vv->val(), vv->height());
         }
     };
     printf("traverse level result:\n");
@@ -114,6 +115,10 @@ void testRBT() {
     };
     printf("traverse level result:\n");
     rbt.traverseLevel(visit);
+
+    rbt.remove(3);
+    printf("after remove 3:\n");
+    rbt.traverseLevel(visit);
 }
 
 void testBuildNext() {
@@ -179,29 +184,29 @@ void testSort() {
 }
 
 int main() {
-    // printf("\n==================== BST TEST ====================\n");
-    // testBST();
+    printf("\n==================== BST TEST ====================\n");
+    testBST();
     printf("\n==================== AVL TEST ====================\n");
     testAVL();
-    // printf("\n==================== Splay TEST ====================\n");
-    // testSplay();
-    // printf("\n==================== Complete Binary Heap TEST ====================\n");
-    // testCompleteBinaryHeap();
-    // printf("\n==================== Left Heap TEST ====================\n");
-    // testLeftHeap();
+    printf("\n==================== Splay TEST ====================\n");
+    testSplay();
+    printf("\n==================== Complete Binary Heap TEST ====================\n");
+    testCompleteBinaryHeap();
+    printf("\n==================== Left Heap TEST ====================\n");
+    testLeftHeap();
     printf("\n==================== RBT TEST ====================\n");
     testRBT();
-    // // printf("\n==================== BuildNext TEST ====================\n");
-    // // testBuildNext();
-    // // printf("\n==================== KMP TEST ====================\n");
-    // // testStringMatch_KMP();
-    // // printf("\n==================== BM TEST ====================\n");
-    // // testStringMatch_BM();
-    // // printf("\n==================== Majority TEST ====================\n");
-    // // testMajority();
-    // // printf("\n==================== Quick Select TEST ====================\n");
-    // // testQuickSelect();
-    // printf("\n==================== Sort TEST ====================\n");
-    // testSort();
+    printf("\n==================== BuildNext TEST ====================\n");
+    testBuildNext();
+    printf("\n==================== KMP TEST ====================\n");
+    testStringMatch_KMP();
+    printf("\n==================== BM TEST ====================\n");
+    testStringMatch_BM();
+    printf("\n==================== Majority TEST ====================\n");
+    testMajority();
+    printf("\n==================== Quick Select TEST ====================\n");
+    testQuickSelect();
+    printf("\n==================== Sort TEST ====================\n");
+    testSort();
     return 0;
 }
