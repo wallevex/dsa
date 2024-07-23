@@ -50,7 +50,13 @@ private:
             return p->leftChildMustAVL()->height() > p->rightChildMustAVL()->height() ? p->leftChildMustAVL() : p->rightChildMustAVL();
         };
         auto v = higher(higher(g));
-        return static_cast<AVLNode<T>*>(this->rotateVPG(v));
+        auto r = static_cast<AVLNode<T>*>(this->rotateVPG(v));
+
+        updateHeight(r->leftChildMustAVL());
+        updateHeight(r->rightChildMustAVL());
+        updateHeight(r);
+
+        return r;
     }
 public:
     BinaryTreeNode<T>* search(const T& e) {
