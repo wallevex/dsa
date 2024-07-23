@@ -9,21 +9,23 @@
 #include <algorithm>
 #include <cstdio>
 
-template <typename T> class LeftHeapNode: public BinaryTreeNode<T> {
-protected:
+template <typename T>
+class LeftHeapNode: public BinaryTreeNode<T> {
+private:
     int _npl;
 public:
-    LeftHeapNode(T e, int h = 0, int l = 1) : BinaryTreeNode<T>(e, h), _npl(l) {}
+    LeftHeapNode(T e, int l = 1) : BinaryTreeNode<T>(e), _npl(l) {}
     int npl() const { return this == nullptr ? 0 : _npl; }
     void updateNpl(int l) { _npl = l; }
 
-    LeftHeapNode<T>* parent() override { return static_cast<LeftHeapNode<T>*>(this->_parent); }
-    LeftHeapNode<T>* leftChild() override { return static_cast<LeftHeapNode<T>*>(this->_lc); }
-    LeftHeapNode<T>* rightChild() override { return static_cast<LeftHeapNode<T>*>(this->_rc); }
+    LeftHeapNode<T>* parentMustLH() { return static_cast<LeftHeapNode<T>*>(this->_parent); }
+    LeftHeapNode<T>* leftChildMustLH()  { return static_cast<LeftHeapNode<T>*>(this->_lc); }
+    LeftHeapNode<T>* rightChildMustLH()  { return static_cast<LeftHeapNode<T>*>(this->_rc); }
 };
 
-template <typename T> class LeftHeap : public PriorityQueue<T> {
-protected:
+template <typename T>
+class LeftHeap : public PriorityQueue<T> {
+private:
 	LeftHeapNode<T>* _root;
 
     static void updateNpl(LeftHeapNode<T>* v) {
@@ -31,7 +33,7 @@ protected:
             v->updateNpl(1);
             return;
         }
-        v->updateNpl(v->rightChild()->npl() + 1);
+        v->updateNpl(v->rightChildMustLH()->npl() + 1);
     }
 
     //左式堆合并算法
@@ -44,9 +46,9 @@ protected:
             std::swap(a, b);
         }
 
-        LeftHeapNode<T>* rc = mergeLeftHeapTree(a->rightChild(), b);
+        auto rc = mergeLeftHeapTree(a->rightChildMustLH(), b);
         rc->connectAsRightChild(a);
-        if (a->leftChild()->npl() < rc->npl()) {
+        if (a->leftChildMustLH()->npl() < rc->npl()) {
             a->swapChildren();
         }
         updateNpl(a);
@@ -82,9 +84,9 @@ public:
     }
 
     T pop() override {
-        LeftHeapNode<T>* lc = _root->leftChild();
+        auto lc = _root->leftChildMustLH();
         if (lc != nullptr) lc->detach();
-        LeftHeapNode<T>* rc = _root->rightChild();
+        auto rc = _root->rightChildMustLH();
         if (rc != nullptr) rc->detach();
         auto top = _root->val();
         delete _root;

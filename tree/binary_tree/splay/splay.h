@@ -2,8 +2,9 @@
 
 #include "../bst.h"
 
-template<typename T> class Splay : public BST<T> {
-protected:
+template<typename T>
+class Splay : public BST<T> {
+private:
     //splay双旋操作，将节点v上移至根节点
     //具体参考学堂在线 https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986405?channel=i.area.learn_title
     BinaryTreeNode<T>* splay(BinaryTreeNode<T>* v) {
@@ -47,11 +48,6 @@ protected:
             } else {
                 v->connectAsChild(gg, gdir);
             }
-
-            //3.自底向上更新g、p、v的高度
-            this->updateHeight(g);
-            this->updateHeight(p);
-            this->updateHeight(v);
         }
 
         //可能需要一次额外的单旋
@@ -65,8 +61,6 @@ protected:
                 p->connectAsLeftChild(v);
             }
             v->detach();
-            this->updateHeight(p);
-            this->updateHeight(v);
         }
 
         return v;
@@ -107,7 +101,6 @@ public:
         }
 
         this->_size++;
-        this->updateHeightUpwards(x);
 
         return this->_root;
     }
@@ -123,7 +116,6 @@ public:
         }
         this->removeAt(x);
         this->_size--;
-        this->updateHeightUpwards(this->_hot);
 
         return true;
     }

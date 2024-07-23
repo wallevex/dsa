@@ -3,23 +3,54 @@
 #include <cstdio>
 #include "../bst.h"
 
-template<typename T> class AVL : public BST<T> {
-protected:
-    static int balanceFactor(BinaryTreeNode<T>* v) {
-        return v->leftChild()->height() - v->rightChild()->height();
+template<typename T>
+class AVLNode : public BinaryTreeNode<T> {
+private:
+    int _height;
+public:
+    AVLNode(T e, int h = 0) : BinaryTreeNode<T>(e), _height(h) {}
+    // 高度这种涉及到整棵树的全局性信息，计算方法对单个节点而言应该是不可见的
+    // 节点只负责直接写覆盖即可
+    int height() const { return this == nullptr ? -1 : _height; }
+    void updateHeight(int h) { _height = h; }
+
+    AVLNode<T>* parentMustAVL()  { return static_cast<AVLNode<T>*>(this->_parent); }
+    AVLNode<T>* leftChildMustAVL()  { return static_cast<AVLNode<T>*>(this->_lc); }
+    AVLNode<T>* rightChildMustAVL()  { return static_cast<AVLNode<T>*>(this->_rc); }
+};
+
+template<typename T>
+class AVL : public BST<T> {
+private:
+    // 更新单个节点高度
+    static void updateHeight(AVLNode<T>* v) {
+        auto h = 1 + std::max(v->leftChildMustAVL()->height(), v->rightChildMustAVL()->height());
+        v->updateHeight(h);
     }
 
-    static bool isBalanced(BinaryTreeNode<T>* v) {
+    // 向上更新祖先节点高度
+    static void updateHeightUpwards(AVLNode<T>* v) {
+        while (v != nullptr) {
+            updateHeight(v);
+            v = v->parentMustAVL();
+        }
+    }
+
+    static int balanceFactor(AVLNode<T>* v) {
+        return v->leftChildMustAVL()->height() - v->rightChildMustAVL()->height();
+    }
+
+    static bool isBalanced(AVLNode<T>* v) {
         auto bf = balanceFactor(v);
         return (-2 < bf) && (bf < 2);
     }
 
-    BinaryTreeNode<T>* rebalance(BinaryTreeNode<T>* g) {
-        auto higher = [](BinaryTreeNode<T>* p) -> BinaryTreeNode<T>* {
-            return p->leftChild()->height() > p->rightChild()->height() ? p->leftChild() : p->rightChild();
+    AVLNode<T>* rebalance(AVLNode<T>* g) {
+        auto higher = [](AVLNode<T>* p) -> AVLNode<T>* {
+            return p->leftChildMustAVL()->height() > p->rightChildMustAVL()->height() ? p->leftChildMustAVL() : p->rightChildMustAVL();
         };
         auto v = higher(higher(g));
-        return this->rotateVPG(v);
+        return static_cast<AVLNode<T>*>(this->rotateVPG(v));
     }
 public:
     BinaryTreeNode<T>* search(const T& e) {
@@ -37,21 +68,22 @@ public:
         }
 
         this->_size++;
-        x = new BinaryTreeNode<T>(e);
+        x = new AVLNode<T>(e);
         x->connectAsChild(this->_hot, this->_hotc);
 
-        for (auto g = this->_hot; g != nullptr; g = g->parent()) {
+        for (auto g = static_cast<AVLNode<T>*>(this->_hot); g != nullptr; g = g->parentMustAVL()) {
             if (!isBalanced(g)) {
                 rebalance(g);
                 break; //最低不平衡节点恢复平衡后，祖先节点会自动恢复平衡
             } else {
-                this->updateHeight(g);
+                updateHeight(g);
             }
         }
 
         return x;
     }
 
+    // TODO 更新高度
     bool remove(const T& e) override {
         auto x = search(e);
         if (x == nullptr) {
@@ -60,11 +92,11 @@ public:
         this->removeAt(x);
         this->_size--;
 
-        for (auto g = this->_hot; g != nullptr; g = g->parent()) {
+        for (auto g = static_cast<AVLNode<T>*>(this->_hot); g != nullptr; g = g->parentMustAVL()) {
             if (!isBalanced(g)) {
                 g = rebalance(g);
             } else {
-                this->updateHeight(g);
+                updateHeight(g);
             }
         }
 

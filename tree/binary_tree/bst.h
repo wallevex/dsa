@@ -2,7 +2,8 @@
 
 #include "binary_tree.h"
 
-template<typename T> class BST : public BinaryTree<T> {
+template<typename T>
+class BST : public BinaryTree<T> {
 protected:
     BinaryTreeNode<T>* _hot; //查找的最后一个节点的父节点
     Dir _hotc; // 查找的最后一个节点相对于父节点的位置
@@ -13,15 +14,12 @@ protected:
                                 BinaryTreeNode<T>* T0, BinaryTreeNode<T>* T1, BinaryTreeNode<T>* T2, BinaryTreeNode<T>* T3) {
         T0->connectAsLeftChild(a);
         T1->connectAsRightChild(a);
-        BinaryTree<T>::updateHeight(a);
 
         T2->connectAsLeftChild(c);
         T3->connectAsRightChild(c);
-        BinaryTree<T>::updateHeight(c);
 
         a->connectAsLeftChild(b);
         c->connectAsRightChild(b);
-        BinaryTree<T>::updateHeight(b);
 
         b->detach();
 
@@ -62,27 +60,33 @@ protected:
         return r;
     }
 
-    //将节点v删除并返回新的根
+    // 返回实际被删除的节点的继任者（注意不一定是v的继任者）
+    // _hot指向实际被删除的节点的父节点
+    // 该接口的语义有利于简化红黑树的删除操作
     BinaryTreeNode<T>* removeAt(BinaryTreeNode<T>* v) {
-        BinaryTreeNode<T>* r;
+        BinaryTreeNode<T> *rm, *succ;
         if (!v->hasRightChild()) {
-            r = v->leftChild();
-            r->connectAsChild(v->parent(), v->dirAsChild());
-            delete v;
+            rm = v;
+            succ = v->leftChild();
+        } else if (!v->hasLeftChild()) {
+            rm = v;
+            succ = v->rightChild();
         } else {
-            r = v;
-            auto succ = successorOf(v);
-            this->_hot = succ->parent();
-            v->updateVal(succ->val());
-            succ->rightChild()->connectAsChild(succ->parent(), succ->dirAsChild());
-            delete succ;
+            auto vsucc = successorOf(v);
+            v->updateVal(vsucc->val());
+            rm = vsucc;
+            succ = vsucc->rightChild();
         }
 
-        if (!r->hasParent()) {
-            this->_root = r;
+        this->_hot = rm->parent();
+        if (!rm->hasParent()) {
+            this->_root = succ;
+        } else {
+            succ->connectAsChild(rm->parent(), rm->dirAsChild());
         }
+        delete rm;
 
-        return r;
+        return succ;
     }
 public:
     BST() : _hot(nullptr), _hotc(UNKNOWN) {}
@@ -138,7 +142,6 @@ public:
         this->_size++;
         x = new BinaryTreeNode<T>(e);
         x->connectAsChild(_hot, _hotc);
-        this->updateHeightUpwards(x);
 
         return x;
     }
@@ -150,7 +153,6 @@ public:
         }
         removeAt(x);
         this->_size--;
-        this->updateHeightUpwards(this->_hot);
         return true;
     }
 };

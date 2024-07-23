@@ -70,7 +70,7 @@ void testSplay() {
         if (v->parent() == nullptr) {
             printf("[%d]\n", v->val());
         } else {
-            printf("[%d <- %d(%d)]\n", v->parent()->val(), v->val(), v->height());
+            printf("[%d <- %d]\n", v->parent()->val(), v->val());
         }
     };
     printf("traverse level result:\n");
@@ -181,8 +181,8 @@ void testSort() {
 int main() {
     // printf("\n==================== BST TEST ====================\n");
     // testBST();
-    // printf("\n==================== AVL TEST ====================\n");
-    // testAVL();
+    printf("\n==================== AVL TEST ====================\n");
+    testAVL();
     // printf("\n==================== Splay TEST ====================\n");
     // testSplay();
     // printf("\n==================== Complete Binary Heap TEST ====================\n");

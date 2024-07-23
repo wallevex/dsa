@@ -8,27 +8,22 @@ typedef enum { UNKNOWN, LEFT, RIGHT } Dir;
 
 // 树节点结构只关注节点的局部信息（比如父节点、左右子节点）和局部操作（比如插入左右子节点）
 // 遍历等涉及到整颗树的宏观操作不要放在这
-template<typename T> class BinaryTreeNode {
+template<typename T>
+class BinaryTreeNode {
 protected:
     T _val;
     BinaryTreeNode<T>* _parent;
     BinaryTreeNode<T>* _lc;
     BinaryTreeNode<T>* _rc;
-    int _height;
 public:
-    BinaryTreeNode(T e, int h = 0) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr), _height(h) {}
-
-    // 高度这种涉及到整棵树的全局性信息，计算方法对单个节点而言应该是不可见的
-    // 节点只负责直接写覆盖即可
-    int height() const { return this == nullptr ? -1 : _height; }
-    void updateHeight(int h) { _height = h; }
+    BinaryTreeNode(T e) : _val(e), _parent(nullptr), _lc(nullptr), _rc(nullptr) {}
 
     T val() const { return _val; }
     void updateVal(T v) { _val = v; }
 
-    virtual BinaryTreeNode<T>* parent() { return _parent; }
-    virtual BinaryTreeNode<T>* leftChild() { return _lc; }
-    virtual BinaryTreeNode<T>* rightChild() { return _rc; }
+    BinaryTreeNode<T>* parent() { return _parent; }
+    BinaryTreeNode<T>* leftChild() { return _lc; }
+    BinaryTreeNode<T>* rightChild() { return _rc; }
 
     bool hasParent() const { return _parent != nullptr; }
     bool hasLeftChild() const { return _lc != nullptr; }
@@ -99,29 +94,19 @@ public:
 };
 
 // 二叉树结构负责整个树宏观的操作，比如更新节点高度、递归删除、遍历等
-template<typename T> class BinaryTree {
+template<typename T>
+class BinaryTree {
 protected:
     unsigned int _size;
     BinaryTreeNode<T>* _root;
 
-    static int calcHeight(BinaryTreeNode<T>* v) {
-        auto lch = (v->leftChild() == nullptr ? -1 : v->leftChild()->height());
-        auto rch = (v->rightChild() == nullptr ? -1 : v->rightChild()->height());
-        auto h = 1 + std::max(lch, rch);
-        return h;
-    }
-
-    static void updateHeight(BinaryTreeNode<T>* v) {
-        auto h = calcHeight(v);
-        v->updateHeight(h);
-    }
-
-    // 向上更新祖先节点高度
-    static void updateHeightUpwards(BinaryTreeNode<T>* v) {
-        while (v != nullptr) {
-            updateHeight(v);
-            v = v->parent();
+    static int calHeight(BinaryTreeNode<T>* v) {
+        if (v == nullptr) {
+            return -1;
         }
+        auto lch = calHeight(v->leftChild());
+        auto rch = calHeight(v->rightChild());
+        return 1 + std::max(lch, rch);
     }
 
     // 递归向下逐个删除节点
@@ -145,23 +130,13 @@ public:
         }
     }
 
-    static bool isRoot(BinaryTreeNode<T>* v) {
-        return !v->hasParent();
-    }
+    static bool isRoot(BinaryTreeNode<T>* v) { return !v->hasParent(); }
+    static bool isLeaf(BinaryTreeNode<T>* v) { return v->leftChild() == nullptr && v->rightChild() == nullptr; }
 
-    static bool isLeaf(BinaryTreeNode<T>* v) {
-        return v->leftChild() == nullptr && v->rightChild() == nullptr;
-    }
-
-    BinaryTreeNode<T>* root() {
-        return _root;
-    }
-
+    BinaryTreeNode<T>* root() { return _root; }
     bool empty() const { return _root == nullptr; }
-
     unsigned int size() const { return _size; }
-
-    int height() const { return _root->height(); }
+    int height() const { return calHeight(_root); }
 
     BinaryTreeNode<T>* insertRoot(T const& e) {
         _size = 1;
@@ -174,7 +149,6 @@ public:
         _size++;
         auto lc = new BinaryTreeNode<T>(e);
         lc->connectAsLeftChild(x);
-        updateHeightUpwards(x);
         return lc;
     }
 
@@ -183,14 +157,12 @@ public:
         _size++;
         auto rc = new BinaryTreeNode<T>(e);
         rc->connectAsRightChild(x);
-        updateHeightUpwards(x);
         return rc;
     }
 
     unsigned int removeSubTree(BinaryTreeNode<T>* v) {
         if (!isRoot(v)) {
             v->detach();
-            updateHeightUpwards(v->parent());
         }
         auto n = removeFrom(v);
         _size -= n;
