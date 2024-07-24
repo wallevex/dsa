@@ -24,6 +24,11 @@ public:
 template <typename T>
 class RBT : public BST<T> {
 protected:
+    // p的子树的黑高度
+    static int childBlackHeightOf(RBTNode<T>* p) {
+        return p->color() == BLACK ? p->blackHeight() - 1 : p->blackHeight();
+    }
+
     // 接口语义：修复v->p->g这一局部子树的双红问题（v、p都为红色）
     // 接口返回：修复双红问题后的v->p->g局部子树的根
     // 参考学堂在线：https://www.xuetangx.com/learn/THU08091002048/THU08091002048/19318085/video/42986623?channel=i.area.learn_title
@@ -135,13 +140,16 @@ public:
         auto p = static_cast<RBTNode<T>*>(this->_hot);
 
         if (p == nullptr) { // 删除的是根节点的情况
-            r->updateColor(BLACK);
-            r->updateBlackHeight(r->blackHeight() + 1);
+            if (r->color() == BLACK) {
+                r->updateBlackHeight(r->blackHeight() - 1);
+            } else {
+                r->updateColor(BLACK);
+            }
             return true;
         }
 
-        auto cbh = p->color() == BLACK ? p->blackHeight() - 1 : p->blackHeight(); // p的子树的黑高度
-        if (cbh == r->blackHeight()) { // 可反推出被删除的节点x的颜色为红色
+        auto cbh = childBlackHeightOf(p);
+        if (r->blackHeight() == cbh) { // 可反推出被删除的节点x的颜色为红色
             return true;
         }
 
