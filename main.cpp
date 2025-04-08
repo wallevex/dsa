@@ -1,16 +1,16 @@
 #include <bits/stdc++.h>
-#include "tree/binary_tree/bst.h"
-#include "tree/binary_tree/avl/avl.h"
-#include "tree/binary_tree/splay/splay.h"
-#include "tree/binary_tree/rbt/rbt.h"
-#include "tree/btree/btree.h"
-#include "priority_queue/priority_queue.h"
-#include "complete_binary_heap/complete_binary_heap.h"
-#include "left_heap/left_heap.h"
-#include "string_match/string_match.h"
-#include "majority/majority.h"
-#include "select/quick_select.h"
-#include "sort/sort.h"
+#include "dsa/tree/binary_tree/bst.h"
+#include "dsa/tree/binary_tree/avl/avl.h"
+#include "dsa/tree/binary_tree/splay/splay.h"
+#include "dsa/tree/binary_tree/rbt/rbt.h"
+#include "dsa/tree/btree/btree.h"
+#include "dsa/priority_queue/priority_queue.h"
+#include "dsa/complete_binary_heap/complete_binary_heap.h"
+#include "dsa/left_heap/left_heap.h"
+#include "dsa/string_match/string_match.h"
+#include "dsa/majority/majority.h"
+#include "dsa/select/quick_select.h"
+#include "dsa/sort/sort.h"
 
 using namespace std;
 
