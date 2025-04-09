@@ -6,9 +6,9 @@
 
 
 
-#include "quick_sort.h"
-#include "shell_sort.h"
-#include "tournament_sort.h"
+#include "quick_sort.hpp"
+#include "shell_sort.hpp"
+#include "tournament_sort.hpp"
 
 // bubbleSort
 // selectSort

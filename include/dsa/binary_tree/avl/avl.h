@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdio>
-#include "dsa/tree/binary_tree/bst.h"
+#include "dsa/binary_tree/bst.h"
 
 template<typename T>
 class AVLNode : public BinaryTreeNode<T> {

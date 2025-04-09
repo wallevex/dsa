@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "dsa/priority_queue/priority_queue.h"
+#include "dsa/priority_queue/priority_queue.hpp"
 #include <vector>
 #include <algorithm>
 #include <cstdio>

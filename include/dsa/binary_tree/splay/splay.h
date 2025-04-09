@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dsa/tree/binary_tree/bst.h"
+#include "dsa/binary_tree/bst.h"
 
 template<typename T>
 class Splay : public BST<T> {

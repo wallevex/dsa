@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "dsa/priority_queue/priority_queue.h"
-#include "dsa/tree/binary_tree/binary_tree.h"
+#include "dsa/priority_queue/priority_queue.hpp"
+#include "dsa/binary_tree/binary_tree.h"
 #include <algorithm>
 #include <cstdio>
 
