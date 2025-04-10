@@ -6,9 +6,9 @@
 
 
 
-#include "quick_sort.hpp"
-#include "shell_sort.hpp"
-#include "tournament_sort.hpp"
+#include "dsa/sort/quick_sort.hpp"
+#include "dsa/sort/shell_sort.hpp"
+#include "dsa/sort/tournament_sort.hpp"
 
 // bubbleSort
 // selectSort

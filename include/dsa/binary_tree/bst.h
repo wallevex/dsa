@@ -1,6 +1,6 @@
 #pragma once
 
-#include "binary_tree.h"
+#include "dsa/binary_tree/binary_tree.h"
 
 template<typename T>
 class BST : public BinaryTree<T> {
