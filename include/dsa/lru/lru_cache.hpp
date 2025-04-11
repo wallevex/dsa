@@ -5,21 +5,29 @@
 
 #include <unordered_map>
 
-struct ListNode {
-    int data;
-    ListNode* prev;
-    ListNode* next;
+struct LRUListNode {
+    int key;
+    LRUListNode* prev;
+    LRUListNode* next;
+
+    LRUListNode(int _key, LRUListNode* _prev, LRUListNode* _next) : key(_key), prev(_prev), next(_next){}
+};
+
+struct CacheBlock {
+    int value;
+    LRUListNode* pos;
+
+    CacheBlock(int _value, LRUListNode* _pos) : value(_value), pos(_pos) {}
 };
 
 // https://leetcode.com/problems/lru-cache/description/
 class LRUCache {
 private:
-    std::unordered_map<int, int> cache;
+    std::unordered_map<int, CacheBlock*> cache;
     int capacity, size;
 
-    ListNode* dummy;
-    ListNode* end;
-    std::unordered_map<int, ListNode*> pos;
+    LRUListNode* dummy;
+    LRUListNode* tail;
 
     void moveToTimelineEnd(int key);
 

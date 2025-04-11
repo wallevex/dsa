@@ -5,34 +5,28 @@
 #include <algorithm>
 
 void LRUCache::moveToTimelineEnd(int key) {
-    ListNode* hit = pos[key];
-    if (hit == end) return;
+    LRUListNode* hit = cache[key]->pos;
+    if (hit == tail) return;
 
     hit->prev->next = hit->next;
     hit->next->prev = hit->prev;
 
-    end->next = hit;
-    hit->prev = end;
+    tail->next = hit;
+    hit->prev = tail;
     hit->next = nullptr;
-    end = hit;
+    tail = hit;
 }
 
 void LRUCache::addToTimelineEnd(int key) {
-    ListNode* newEnd = new(ListNode);
-    newEnd->data = key;
-    newEnd->next = nullptr;
-    end->next = newEnd;
-    newEnd->prev = end;
-    end = newEnd;
-    pos[key] = end;
+    auto newTail = new LRUListNode(key, tail, nullptr);
+    tail->next = newTail;
+    tail = newTail;
 }
 
 int LRUCache::replaceLRU(int key) {
-    int lru = dummy->next->data;
+    int lru = dummy->next->key;
     moveToTimelineEnd(lru);
-    end->data = key;
-    pos.erase(lru);
-    pos[key] = end;
+    tail->key = key;
     return lru;
 }
 
@@ -41,15 +35,14 @@ LRUCache::LRUCache(int capacity) {
     size = 0;
     cache.reserve(capacity);
 
-    dummy = new(ListNode);
-    end = dummy;
-    pos.reserve(capacity);
+    dummy = new LRUListNode(-1, nullptr, nullptr);
+    tail = dummy;
 }
 
 int LRUCache::get(int key) {
     if (cache.find(key) != cache.end()) {
         moveToTimelineEnd(key);
-        return cache[key];
+        return cache[key]->value;
     }
 
     return -1;
@@ -59,20 +52,20 @@ void LRUCache::put(int key, int value) {
     // 1. already exists, move to timeline end
     if (cache.find(key) != cache.end()) {
         moveToTimelineEnd(key);
-        cache[key] = value;
+        cache[key]->value = value;
         return;
     }
 
     // 2. cache is not empty, add to timeline end
     if (size < capacity) {
         addToTimelineEnd(key);
-        cache[key] = value;
+        cache[key] = new CacheBlock(value, tail);
         size++;
         return;
     }
 
     // 3. cache is full, replace LRU
     int lru = replaceLRU(key);
+    cache[key] = new CacheBlock(value, tail);
     cache.erase(lru);
-    cache[key] = value;
 }
