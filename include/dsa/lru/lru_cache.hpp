@@ -14,12 +14,12 @@ struct ListNode {
 // https://leetcode.com/problems/lru-cache/description/
 class LRUCache {
 private:
+    std::unordered_map<int, int> cache;
+    int capacity, size;
+
     ListNode* dummy;
     ListNode* end;
     std::unordered_map<int, ListNode*> pos;
-
-    std::unordered_map<int, int> cache;
-    int capacity, size;
 
     void moveToTimelineEnd(int key);
 
