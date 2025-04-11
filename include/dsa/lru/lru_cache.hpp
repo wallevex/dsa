@@ -4,15 +4,28 @@
 #pragma once
 
 #include <unordered_map>
-#include "dsa/lru/lru_timeline.hpp"
+
+struct ListNode {
+    int data;
+    ListNode* prev;
+    ListNode* next;
+};
 
 // https://leetcode.com/problems/lru-cache/description/
 class LRUCache {
 private:
-    LRUTimeline* timeline;
+    ListNode* dummy;
+    ListNode* end;
+    std::unordered_map<int, ListNode*> pos;
 
     std::unordered_map<int, int> cache;
     int capacity, size;
+
+    void moveToTimelineEnd(int key);
+
+    void addToTimelineEnd(int key);
+
+    int replaceLRU(int key);
 public:
     LRUCache(int capacity);
 
