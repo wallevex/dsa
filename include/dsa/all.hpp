@@ -17,4 +17,4 @@
 #include "dsa/select/quick_select.hpp"
 #include "dsa/sort/sort.hpp"
 
-#include "dsa/lru/lru_cache.hpp"
+#include "dsa/cache/cache.hpp"
