@@ -10,13 +10,13 @@ std::vector<int> buildNext(std::string p) {
 
     int m = p.length();
     std::vector<int> next(m);
-    int pm = next[0] = -1;
+    int mx = next[0] = -1;
     for (int j = 1; j < m; j++) {
-        while (0 <= pm && (p[pm] != p[j - 1])) {
-            pm = next[pm];
+        while (0 <= mx && (p[mx] != p[j - 1])) {
+            mx = next[mx];
         }
-        pm += 1;
-        next[j] = (p[pm] != p[j] ? pm : next[pm]);
+        mx += 1;
+        next[j] = (p[mx] != p[j] ? mx : next[mx]);
     }
 
     return next;

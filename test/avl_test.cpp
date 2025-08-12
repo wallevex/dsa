@@ -34,6 +34,23 @@ TEST(AVLTest, Insert) {
     EXPECT_EQ(expect, edges);
 }
 
+TEST(AVLTest, InsertFull) {
+    AVL<int> avl;
+    for (int e = 1; e <= 7; e++) {
+        avl.insert(e);
+    }
+
+    std::vector<int> arr;
+    auto visit = [&](BinaryTreeNode<int>* v) {
+        AVLNode<int>* x = static_cast<AVLNode<int>*>(v);
+        arr.push_back(x->val());
+    };
+    avl.traverseIn(visit);
+
+    std::vector<int> expect = {1, 2, 3, 4, 5, 6, 7};
+    EXPECT_EQ(expect, arr);
+}
+
 TEST(AVLTest, Remove) {
     AVL<int> avl;
     for (int e = 1; e <= 9; e++) {
